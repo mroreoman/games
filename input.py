@@ -2,7 +2,7 @@ ordinals = ('st','nd','rd')
 
 def num(text):
     while((coord:=input(text)).isdigit() is not True):
-        pass
+        print("input must be a number!")
     return int(coord)
 
 def twoNum(text):
