@@ -2,6 +2,7 @@ import random
 from time import time
 from math import trunc
 from enum import Enum
+from input import num, twoNum
 Markings = Enum("Markings", ["FILLED", "EMPTY"])
 
 class Tile:
@@ -30,6 +31,7 @@ class Board:
         self.topMargin = max([len(col) for col in self.colLabels])
         self.leftMargin = max([len(row) for row in self.rowLabels])
         self.startTime = time()
+        self.won = None
         print(self)
 
     def countCols(self):
@@ -102,30 +104,26 @@ class Board:
 
     def markTile(self, x, y, marking):
         self.mark(self.tiles[self.size-y-1][x], marking)
-        print(self)
 
     def markRow(self, y, marking):
         for tile in self.tiles[self.size-y-1]:
             if tile.marking is None:
                 self.mark(tile, marking)
-        print(self)
 
     def markCol(self, x, marking):
         for tile in [row[x] for row in self.tiles]:
             if tile.marking is None:
                 self.mark(tile, marking)
-        print(self)
 
     def submit(self):
         self.endTime = time()
         if self.solved():
             self.won = True
-            print(f"\nyou won! it took {trunc(self.endTime - self.startTime)} seconds!!\n")
+            print(f"you won! it took {trunc(self.endTime - self.startTime)} seconds!!\n")
         else:
-            self.lost = False
-            print(f"\nyou lost! it took {trunc(self.endTime - self.startTime)} seconds!!\n")
+            self.won = False
+            print(f"you lost! it took {trunc(self.endTime - self.startTime)} seconds!!\n")
         self.revealTiles()
-        print(self)
 
 boards = []
 
@@ -141,49 +139,49 @@ def start():
     play(boards[-1])
 
 def play(board):
-    while(True):
-        try:
-            move = input("move: ")
-            coords = input("coords (x,y): ")
-            x = int(coords[:coords.find(",")])
-            y = int(coords[coords.find(",") + 1:])
-        except:
-            continue
+    while(board.won is None):
+        move = input("move: ")
 
         if move == 'x':
             break
 
-def n(size):
-    boards.append(Board(size))
+        if move == 'f':
+            x,y = twoNum("x,y: ")
+            board.markTile(x-1, y-1, Markings.FILLED)
+        elif move == 'fr':
+            y = num("y: ")
+            board.markRow(y-1, Markings.FILLED)
+        elif move == 'fc':
+            x = num("x: ")
+            board.markCol(x-1, Markings.FILLED)
+        elif move == 'e':
+            x,y = twoNum("x,y: ")
+            board.markTile(x-1, y-1, Markings.EMPTY)
+        elif move == 'er':
+            y = num("y: ")
+            board.markRow(y-1, Markings.EMPTY)
+        elif move == 'ec':
+            x = num("x: ")
+            board.markCol(x-1, Markings.EMPTY)
+        elif move == 'u':
+            x,y = twoNum("x,y: ")
+            board.markTile(x-1, y-1, None)
+        elif move == 'ur':
+            y = num("y: ")
+            board.markRow(y-1, None)
+        elif move == 'uc':
+            x = num("x: ")
+            board.markCol(x-1, None)
+        elif move == 's':
+            board.submit()
+        else:
+            continue
 
-def f(x, y):
-    boards[-1].markTile(x-1, y-1, Markings.FILLED)
-    
-def fr(y):
-    boards[-1].markRow(y-1, Markings.FILLED)
-    
-def fc(x):
-    boards[-1].markCol(x-1, Markings.FILLED)
+        print('\n' + board + '\n')
 
-def e(x, y):
-    boards[-1].markTile(x-1, y-1, Markings.EMPTY)
-
-def er(y):
-    boards[-1].markRow(y-1, Markings.EMPTY)
-
-def ec(x):
-    boards[-1].markCol(x-1, Markings.EMPTY)
-
-def u(x, y):
-    boards[-1].markTile(x-1, y-1, None)
-
-def ur(y):
-    boards[-1].markRow(y-1, None)
-
-def uc(x):
-    boards[-1].markCol(x-1, None)
-
-def s():
-    boards[-1].submit()
-
-n(5)
+while(True):
+    choice = input("s to start, x to exit: ")
+    if choice == 'x':
+        break
+    elif choice == 's':
+        start()

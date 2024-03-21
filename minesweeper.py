@@ -3,6 +3,7 @@ import time
 import math
 from enum import Enum
 from colorama import Fore, Style
+from input import twoNum
 
 State = Enum("State", ["HIDDEN", "SHOWN", "FLAGGED"])
 colors = (Fore.WHITE, Fore.BLUE, Fore.GREEN, Fore.YELLOW, Fore.MAGENTA, Fore.RED, Fore.CYAN, Fore.WHITE, Fore.BLACK)
@@ -195,29 +196,30 @@ def start():
     play(boards[-1])
 
 def play(board):
-    while(board.won == None):
-        try:
-            move = input("move: ")
-            coords = input("coords (x,y): ")
-            x = int(coords[:coords.find(",")])
-            y = int(coords[coords.find(",") + 1:])
-        except:
-            continue
-
+    while(board.won is None):
+        move = input("move: ")
+        
         if move == 'x':
             break
-        elif move == 'c':
+
+        if move == 'c':
+            x,y = twoNum("x,y: ")
             board.click(x, y)
         elif move == 'f':
+            x,y = twoNum("x,y: ")
             board.flag(x, y)
         elif move == 'u':
+            x,y = twoNum("x,y: ")
             board.unflag(x, y)
         elif move == 'cn':
+            x,y = twoNum("x,y: ")
             if board.tileFull(x, y):
                 Board.onNeighbors(board.click, x, y)
         elif move == 'fn':
+            x,y = twoNum("x,y: ")
             Board.onNeighbors(board.flag, x, y)
         elif move == 'un':
+            x,y = twoNum("x,y: ")
             Board.onNeighbors(board.unflag, x, y)
         else:
             continue
