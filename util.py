@@ -1,18 +1,18 @@
 ordinals = ('st','nd','rd')
 
-def num(text):
+def inputNum(text):
     while((coord:=input(text)).isdigit() is not True):
         print("input must be a number!")
     return int(coord)
 
-def twoNum(text):
+def inputTwoNums(text):
     while(True):
         coords = input(text)
         x,y = coords.split(',')
         if x.isdigit and y.isdigit:
             return (int(x),int(y))
         
-def infNum(length, text="", seperator=','):
+def inputNums(length, text="", seperator=','):
     raw = input(text).replace(' ', '')
     nums = raw.split(seperator)
     

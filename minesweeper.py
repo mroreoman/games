@@ -3,7 +3,7 @@ import time
 import math
 from enum import Enum
 from colorama import Fore, Style
-from input import twoNum
+from util import inputTwoNums
 
 State = Enum("State", ["HIDDEN", "SHOWN", "FLAGGED"])
 colors = (Fore.WHITE, Fore.BLUE, Fore.GREEN, Fore.YELLOW, Fore.MAGENTA, Fore.RED, Fore.CYAN, Fore.WHITE, Fore.BLACK)
@@ -175,7 +175,7 @@ class Board:
 boards = []
 
 def start():
-    while(True):
+    while True:
         mode = input("easy, medium, hard, custom: ")
         if mode in ("e", "easy"):
             boards.append(Board(9,9,10))
@@ -196,30 +196,30 @@ def start():
     play(boards[-1])
 
 def play(board):
-    while(board.won is None):
+    while board.won is None:
         move = input("move: ")
         
         if move == 'x':
             break
 
         if move == 'c':
-            x,y = twoNum("x,y: ")
+            x,y = inputTwoNums("x,y: ")
             board.click(x, y)
         elif move == 'f':
-            x,y = twoNum("x,y: ")
+            x,y = inputTwoNums("x,y: ")
             board.flag(x, y)
         elif move == 'u':
-            x,y = twoNum("x,y: ")
+            x,y = inputTwoNums("x,y: ")
             board.unflag(x, y)
         elif move == 'cn':
-            x,y = twoNum("x,y: ")
+            x,y = inputTwoNums("x,y: ")
             if board.tileFull(x, y):
                 Board.onNeighbors(board.click, x, y)
         elif move == 'fn':
-            x,y = twoNum("x,y: ")
+            x,y = inputTwoNums("x,y: ")
             Board.onNeighbors(board.flag, x, y)
         elif move == 'un':
-            x,y = twoNum("x,y: ")
+            x,y = inputTwoNums("x,y: ")
             Board.onNeighbors(board.unflag, x, y)
         else:
             continue
@@ -243,7 +243,7 @@ records
 have fun !!
 """)
 
-while(True):
+while True:
     choice = input("s to start, x to exit: ")
     if choice == 'x':
         break

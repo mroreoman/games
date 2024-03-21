@@ -2,7 +2,7 @@ import random
 from time import time
 from math import trunc
 from enum import Enum
-from input import num, twoNum
+from util import inputNum, inputTwoNums
 Markings = Enum("Markings", ["FILLED", "EMPTY"])
 
 class Tile:
@@ -128,7 +128,7 @@ class Board:
 boards = []
 
 def start():
-    while(True):
+    while True:
         try:
             size = int(input("board size: "))
         except:
@@ -139,38 +139,38 @@ def start():
     play(boards[-1])
 
 def play(board):
-    while(board.won is None):
+    while board.won is None:
         move = input("move: ")
 
         if move == 'x':
             break
 
         if move == 'f':
-            x,y = twoNum("x,y: ")
+            x,y = inputTwoNums("x,y: ")
             board.markTile(x-1, y-1, Markings.FILLED)
         elif move == 'fr':
-            y = num("y: ")
+            y = inputNum("y: ")
             board.markRow(y-1, Markings.FILLED)
         elif move == 'fc':
-            x = num("x: ")
+            x = inputNum("x: ")
             board.markCol(x-1, Markings.FILLED)
         elif move == 'e':
-            x,y = twoNum("x,y: ")
+            x,y = inputTwoNums("x,y: ")
             board.markTile(x-1, y-1, Markings.EMPTY)
         elif move == 'er':
-            y = num("y: ")
+            y = inputNum("y: ")
             board.markRow(y-1, Markings.EMPTY)
         elif move == 'ec':
-            x = num("x: ")
+            x = inputNum("x: ")
             board.markCol(x-1, Markings.EMPTY)
         elif move == 'u':
-            x,y = twoNum("x,y: ")
+            x,y = inputTwoNums("x,y: ")
             board.markTile(x-1, y-1, None)
         elif move == 'ur':
-            y = num("y: ")
+            y = inputNum("y: ")
             board.markRow(y-1, None)
         elif move == 'uc':
-            x = num("x: ")
+            x = inputNum("x: ")
             board.markCol(x-1, None)
         elif move == 's':
             board.submit()
@@ -179,7 +179,7 @@ def play(board):
 
         print('\n' + board + '\n')
 
-while(True):
+while True:
     choice = input("s to start, x to exit: ")
     if choice == 'x':
         break

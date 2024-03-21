@@ -1,9 +1,9 @@
 import random
-import input
+from util import inputNum
 num = random.randrange(100)
 guesses = 1
 print(f"guess my age!")
-while((guess:=input.num("your guess: ")) != num):
+while (guess:=inputNum("your guess: ")) != num:
     if guess > num:
         print("too high!")
     else:
