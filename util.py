@@ -1,4 +1,8 @@
+from colorama import Fore
 ordinals = ('st','nd','rd')
+
+def color(text, color):
+    return(color + text + Fore.RESET)
 
 def inputNum(text):
     while((coord:=input(text)).isdigit() is not True):

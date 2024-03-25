@@ -1,4 +1,7 @@
 import random
+from util import color
+from colorama import Fore
+
 wordleTa = []
 wordleLa = []
 with open(r"wordleDictionary\wordle-La.txt", "r") as file:
@@ -9,7 +12,6 @@ with open(r"wordleDictionary\wordle-Ta.txt", "r") as file:
         wordleTa.append(file.readline().strip())
 
 word = wordleLa[random.randrange(2315)].strip()
-print(word)
 
 guesses = 0
 guess = ""
@@ -17,24 +19,27 @@ while guess != word:
     while True:
         guess = input("guess: ")
         if not guess.isalpha():
-            print("guess must be letters")
+            print("invalid characters")
         elif len(guess) != 5:
-            print("not enough letters")
+            print("invalid length")
         elif not (guess in wordleLa or guess in wordleTa):
             print("not in word list")
         else:
             break
     
     guesses += 1
-    hints = []
     for i, letter in enumerate(guess):
         if letter not in word:
-            hints.append("grey")
+            print(color(letter, Fore.WHITE), end='')
         elif letter == word[i]:
-            hints.append("green")
+            print(color(letter, Fore.GREEN), end='')
         elif guess.count(letter) > word.count(letter):
-            #if its the extra repeating letter it should be grey
+            if guess[:i+1].count(letter) - sum([1 for a, b in zip(word, guess) if a == b]) > word.count(letter):
+                print(color(letter, Fore.WHITE), end='')
+            else:
+                print(color(letter, Fore.YELLOW), end='')
         else:
-            hints.append("yellow")
+            print((color(letter, Fore.YELLOW)), end='')
+    print()
 
 print("you got it! it took " + str(guesses) + (" guess!" if guesses == 1 else " guesses!"))
