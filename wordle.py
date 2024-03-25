@@ -5,14 +5,14 @@ from colorama import Fore
 wordleTa = []
 wordleLa = []
 with open(r"wordleDictionary\wordle-La.txt", "r") as file:
-    for i in range(2315):
+    for i in range(2315): # TODO: better way to do this?
         wordleLa.append(file.readline().strip())
 with open(r"wordleDictionary\wordle-Ta.txt", "r") as file:
     for i in range(10657):
         wordleTa.append(file.readline().strip())
 
 word = wordleLa[random.randrange(2315)].strip()
-
+print(word, end = '\n'*50)
 guesses = 0
 guess = ""
 while guess != word:
@@ -34,7 +34,7 @@ while guess != word:
         elif letter == word[i]:
             print(color(letter, Fore.GREEN), end='')
         elif guess.count(letter) > word.count(letter):
-            if guess[:i+1].count(letter) - sum([1 for a, b in zip(word, guess) if a == b]) > word.count(letter):
+            if guess[:i+1].count(letter) - sum([1 for a, b in zip(word[i:], guess[i:]) if a == b and a == letter]) > word.count(letter): #subtract number of green letter after i
                 print(color(letter, Fore.WHITE), end='')
             else:
                 print(color(letter, Fore.YELLOW), end='')
