@@ -4,16 +4,24 @@ from colorama import Fore
 
 wordleTa = []
 wordleLa = []
+
 with open(r"wordleDictionary\wordle-La.txt", "r") as file:
-    for i in range(2315): # TODO: better way to do this?
-        wordleLa.append(file.readline().strip())
+    while True:
+        line = file.readline()
+        if not line:
+            break
+        wordleLa.append(line.strip())
+
 with open(r"wordleDictionary\wordle-Ta.txt", "r") as file:
-    for i in range(10657):
-        wordleTa.append(file.readline().strip())
+    while True:
+        line = file.readline()
+        if not line:
+            break
+        wordleTa.append(line.strip())
 
 word = wordleLa[random.randrange(2315)].strip()
-print(word, end = '\n'*50)
 guesses = 0
+
 guess = ""
 while guess != word:
     while True:
