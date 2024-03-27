@@ -20,6 +20,13 @@ with open(r"wordleDictionary\wordle-Ta.txt", "r") as file:
         wordleTa.append(line.strip())
 
 word = wordleLa[random.randrange(2315)].strip()
+
+wordLetters = {}
+for letter in word:
+    if letter not in wordLetters:
+        wordLetters.update({letter:0})
+    wordLetters[letter] += 1
+
 guesses = 0
 
 guess = ""
@@ -36,17 +43,16 @@ while guess != word:
             break
     
     guesses += 1
+    wordLettersC = wordLetters.copy()
+
     for i, letter in enumerate(guess):
-        if letter not in word:
+        if letter not in word or wordLettersC[letter] == 0:
             print(color(letter, Fore.WHITE), end='')
         elif letter == word[i]:
+            wordLettersC[letter] -= 1
             print(color(letter, Fore.GREEN), end='')
-        elif guess.count(letter) > word.count(letter):
-            if guess[:i+1].count(letter) - sum([1 for a, b in zip(word[i:], guess[i:]) if a == b and a == letter]) > word.count(letter): #subtract number of green letter after i
-                print(color(letter, Fore.WHITE), end='')
-            else:
-                print(color(letter, Fore.YELLOW), end='')
         else:
+            wordLettersC[letter] -= 1
             print((color(letter, Fore.YELLOW)), end='')
     print()
 
