@@ -12,6 +12,7 @@ my goal is to make all of the games in python, java, c++, and rust
 - wordle
 
 ### java
+- age guess
 
 ### c++
 
