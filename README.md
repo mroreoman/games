@@ -5,15 +5,17 @@ purpose of this project is to get back into coding and learn a few new languages
 
 my goal is to make all of the games in python, java, c++, and rust
 
-### python
+### completed games
+#### python
 - minesweeper
 - picross
 - age guess
 - wordle
 
-### java
+#### java
 - age guess
+- picross (in progress)
 
-### c++
+#### c++
 
-### rust
+#### rust
