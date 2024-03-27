@@ -1,3 +1,4 @@
+import os
 import random
 from util import color
 from colorama import Fore
@@ -5,14 +6,15 @@ from colorama import Fore
 wordleTa = []
 wordleLa = []
 
-with open(r"wordleDictionary\wordle-La.txt", "r") as file:
+cur_path = os.path.dirname(__file__)
+with open(os.path.join(cur_path, '..\\wordleDictionary\\wordle-La.txt'), "r") as file:
     while True:
         line = file.readline()
         if not line:
             break
         wordleLa.append(line.strip())
 
-with open(r"wordleDictionary\wordle-Ta.txt", "r") as file:
+with open(os.path.join(cur_path, '..\\wordleDictionary\\wordle-Ta.txt'), "r") as file:
     while True:
         line = file.readline()
         if not line:
