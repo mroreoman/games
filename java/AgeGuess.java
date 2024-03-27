@@ -25,5 +25,6 @@ public class AgeGuess {
         }
 
         System.out.println("you got it! it took " + guesses + " tries!");
+        scan.close();
     }
 }
