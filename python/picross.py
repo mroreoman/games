@@ -177,7 +177,7 @@ def play(board):
         else:
             continue
 
-        print('\n' + board + '\n')
+        print('\n' + str(board) + '\n')
 
 while True:
     choice = input("s to start, x to exit: ")
