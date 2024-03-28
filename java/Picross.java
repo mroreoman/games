@@ -127,7 +127,7 @@ public class Picross {
 
     static class Board {
         private Tile[][] tiles;
-        private int[][] rowCounts;
+        private String[] rowLabels;
         private int[] colCounts;
 
         public Board(int size) {
@@ -141,30 +141,43 @@ public class Picross {
             countCols();
         }
 
-        private void countRows() { //TODO: test this
-            rowCounts = new int[tiles.length][];
-            int max = 0; //TODO changing rowCoutns from int[][] to String[]
-            for (int y = 0; y < tiles.length; y++) {
-                ArrayList<Integer> rowCount = new ArrayList<Integer>();
-                boolean prev = false;
-                for (int x = 0; x < tiles.length; x++) {
-                    if (tiles[y][x].isFilled()) {
-                        if (prev) {
-                            rowCount.set(rowCount.size() - 1, rowCount.getLast() + 1);
-                        } else {
-                            rowCount.add(1);
-                            prev = true;
-                        }
-                    } else {
-                        prev = false;
-                    }
+private void countRows() {
+    rowLabels = new String[tiles.length];
+    int max = 0;
+
+    for (int y = 0; y < tiles.length; y++) {
+        ArrayList<Integer> rowCount = new ArrayList<Integer>();
+        boolean prev = false;
+        rowLabels[y] = "";
+
+        for (int x = 0; x < tiles.length; x++) {
+            if (tiles[y][x].isFilled()) {
+                if (prev) {
+                    rowCount.set(rowCount.size() - 1, rowCount.getLast() + 1);
+                } else {
+                    rowCount.add(1);
+                    prev = true;
                 }
-                rowCounts[y] = new int[rowCount.size()];
-                for (int i = 0; i < rowCounts[y].length; i++) {
-                    rowCounts[y][i] = rowCount.get(i);
-                }
+            } else {
+                prev = false;
             }
         }
+
+        if (rowCount.size() > max) {
+            max = rowCount.size();
+        }
+
+        for (int i = 0; i < rowCount.size(); i++) {
+            rowLabels[y] = rowCount.get(i) + " " + rowLabels[y];
+        }
+    }
+    
+    for (int i = 0; i < rowLabels.length; i++) {
+        if (max * 2 > rowLabels[i].length()) {
+            rowLabels[i] = " ".repeat(max * 2 - rowLabels[i].length()) + rowLabels[i];
+        }
+    }
+}
 
         private void countCols() {
             colCounts = new int[tiles.length];
@@ -211,11 +224,9 @@ public class Picross {
         public String toString() { //TODO: add row/col counts
             String out = "";
             for (int y = 0; y < tiles.length; y++) {
-                for (int count : rowCounts[y]) {
-                    out += count + " ";
-                }
+                out += rowLabels[y];
                 for (int x = 0; x < tiles.length; x++) {
-                    out += " " + tiles[y][x] + " ";
+                    out += tiles[y][x] + " ";
                 }
                 out += "\n";
             }
