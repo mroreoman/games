@@ -127,7 +127,7 @@ public class Picross {
 
     static class Board {
         private Tile[][] tiles;
-        private int[] rowCounts;
+        private int[][] rowCounts;
         private int[] colCounts;
 
         public Board(int size) {
@@ -141,8 +141,9 @@ public class Picross {
             countCols();
         }
 
-        private int[][] countRows() { //TODO: test this
-            int[][] rowCounts = new int[tiles.length][];
+        private void countRows() { //TODO: test this
+            rowCounts = new int[tiles.length][];
+            int max = 0; //TODO changing rowCoutns from int[][] to String[]
             for (int y = 0; y < tiles.length; y++) {
                 ArrayList<Integer> rowCount = new ArrayList<Integer>();
                 boolean prev = false;
@@ -163,8 +164,6 @@ public class Picross {
                     rowCounts[y][i] = rowCount.get(i);
                 }
             }
-            
-            return rowCounts;
         }
 
         private void countCols() {
@@ -212,7 +211,9 @@ public class Picross {
         public String toString() { //TODO: add row/col counts
             String out = "";
             for (int y = 0; y < tiles.length; y++) {
-                System.out.print(rowCounts);
+                for (int count : rowCounts[y]) {
+                    out += count + " ";
+                }
                 for (int x = 0; x < tiles.length; x++) {
                     out += " " + tiles[y][x] + " ";
                 }
