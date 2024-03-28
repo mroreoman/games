@@ -137,54 +137,66 @@ public class Picross {
                     tiles[i][j] = new Tile();
                 }
             }
-            countRows();
+            this.rowLabels = countRows();
             countCols();
         }
 
-private void countRows() {
-    rowLabels = new String[tiles.length];
-    int max = 0;
+        private String[] countRows() {
+            String[] rowLabels = new String[tiles.length];
+            int max = 0;
 
-    for (int y = 0; y < tiles.length; y++) {
-        ArrayList<Integer> rowCount = new ArrayList<Integer>();
-        boolean prev = false;
-        rowLabels[y] = "";
+            for (int y = 0; y < tiles.length; y++) {
+                ArrayList<Integer> rowCount = new ArrayList<Integer>();
+                boolean prev = false;
+                rowLabels[y] = "";
 
-        for (int x = 0; x < tiles.length; x++) {
-            if (tiles[y][x].isFilled()) {
-                if (prev) {
-                    rowCount.set(rowCount.size() - 1, rowCount.getLast() + 1);
-                } else {
-                    rowCount.add(1);
-                    prev = true;
+                for (int x = 0; x < tiles.length; x++) {
+                    if (tiles[y][x].isFilled()) {
+                        if (prev) {
+                            rowCount.set(rowCount.size() - 1, rowCount.getLast() + 1);
+                        } else {
+                            rowCount.add(1);
+                            prev = true;
+                        }
+                    } else {
+                        prev = false;
+                    }
                 }
-            } else {
-                prev = false;
+
+                if (rowCount.size() > max) {
+                    max = rowCount.size();
+                }
+
+                for (int i = 0; i < rowCount.size(); i++) {
+                    rowLabels[y] = rowCount.get(i) + " " + rowLabels[y];
+                }
             }
-        }
+            
+            for (int i = 0; i < rowLabels.length; i++) {
+                if (max * 2 > rowLabels[i].length()) {
+                    rowLabels[i] = " ".repeat(max * 2 - rowLabels[i].length()) + rowLabels[i];
+                }
+            }
 
-        if (rowCount.size() > max) {
-            max = rowCount.size();
+            return rowLabels;
         }
-
-        for (int i = 0; i < rowCount.size(); i++) {
-            rowLabels[y] = rowCount.get(i) + " " + rowLabels[y];
-        }
-    }
-    
-    for (int i = 0; i < rowLabels.length; i++) {
-        if (max * 2 > rowLabels[i].length()) {
-            rowLabels[i] = " ".repeat(max * 2 - rowLabels[i].length()) + rowLabels[i];
-        }
-    }
-}
 
         private void countCols() {
-            colCounts = new int[tiles.length];
-            for (int x = 0; x < colCounts.length; x++) {
-                for (int y = 0; y < colCounts.length; y++) {
+            // colCounts = new int[tiles.length];
+            String[] colLabels = new String[tiles.length];
+
+            for (int x = 0; x < tiles.length; x++) {
+                colLabels[x] = "";
+
+                for (int y = 0; y < tiles.length; y++) {
+                    int count = 0;
                     if (tiles[y][x].isFilled()) {
-                        colCounts[x]++;
+                        count++;
+                    } else {
+                        if (count > 0) {
+                            colLabels[x] += count;
+                        }
+                        count = 0;
                     }
                 }
             }
@@ -222,6 +234,11 @@ private void countRows() {
         }
 
         public String toString() { //TODO: add row/col counts
+            // have a column label string as a class cariable
+            // so it only has to create the string once
+            // don't need to store individually column counts after the initial count
+            // for rows just store a label for each row (already have this)
+            
             String out = "";
             for (int y = 0; y < tiles.length; y++) {
                 out += rowLabels[y];
