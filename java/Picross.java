@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.Random;
+import java.util.ArrayList;
 
 public class Picross {
     final static Random rand = new Random();
@@ -100,6 +101,10 @@ public class Picross {
             this.mark = mark;
         }
 
+        public boolean isFilled() {
+            return filled;
+        }
+
         public boolean isSolved() {
             if (filled) {
                 return mark == Marks.FILLED;
@@ -122,6 +127,8 @@ public class Picross {
 
     static class Board {
         private Tile[][] tiles;
+        private int[] rowCounts;
+        private int[] colCounts;
 
         public Board(int size) {
             tiles = new Tile[size][size];
@@ -130,11 +137,50 @@ public class Picross {
                     tiles[i][j] = new Tile();
                 }
             }
+            countRows();
+            countCols();
         }
 
-        public void markTile(int x, int y, Marks mark){
+        private int[][] countRows() { //TODO: test this
+            int[][] rowCounts = new int[tiles.length][];
+            for (int y = 0; y < tiles.length; y++) {
+                ArrayList<Integer> rowCount = new ArrayList<Integer>();
+                boolean prev = false;
+                for (int x = 0; x < tiles.length; x++) {
+                    if (tiles[y][x].isFilled()) {
+                        if (prev) {
+                            rowCount.set(rowCount.size() - 1, rowCount.getLast() + 1);
+                        } else {
+                            rowCount.add(1);
+                            prev = true;
+                        }
+                    } else {
+                        prev = false;
+                    }
+                }
+                rowCounts[y] = new int[rowCount.size()];
+                for (int i = 0; i < rowCounts[y].length; i++) {
+                    rowCounts[y][i] = rowCount.get(i);
+                }
+            }
+            
+            return rowCounts;
+        }
+
+        private void countCols() {
+            colCounts = new int[tiles.length];
+            for (int x = 0; x < colCounts.length; x++) {
+                for (int y = 0; y < colCounts.length; y++) {
+                    if (tiles[y][x].isFilled()) {
+                        colCounts[x]++;
+                    }
+                }
+            }
+        }
+
+        public void markTile(int x, int y, Marks mark) {
             try {
-                tiles[x][y].mark(mark);
+                tiles[y][x].mark(mark);
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("coordinates not in board!");
             }
@@ -163,11 +209,12 @@ public class Picross {
             return true;
         }
 
-        public String toString() { //TODO: add hints
+        public String toString() { //TODO: add row/col counts
             String out = "";
-            for (Tile[] row : tiles) {
-                for (Tile tile : row) {
-                    out += " " + tile + " ";
+            for (int y = 0; y < tiles.length; y++) {
+                System.out.print(rowCounts);
+                for (int x = 0; x < tiles.length; x++) {
+                    out += " " + tiles[y][x] + " ";
                 }
                 out += "\n";
             }
