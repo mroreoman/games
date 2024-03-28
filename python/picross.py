@@ -75,7 +75,7 @@ class Board:
             text += ' ' * self.leftMargin
             for label in self.colLabels:
                 i = n - self.topMargin + len(label)
-                text += ' ' + (str(label[i]) if i > -1 else ' ') # TODO: this will not work for multiple digit labels
+                text += ' ' + (str(label[i]) if i >= 0 else ' ') # TODO: this will not work for multiple digit labels
             text += '\n'
         
         for label, row in zip(self.rowLabels, self.tiles):
