@@ -1,20 +1,30 @@
 import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 public class Picross {
     final static Random rand = new Random();
     final static Scanner scan = new Scanner(System.in);
 
-    enum Marks {HIDDEN, FILLED, EMPTY};
+    enum Marks {HIDDEN, FILLED, EMPTY, REVEALED};
 
     public static void main(String[] args) {
-        System.out.print("enter board size: ");
-        int size = scan.nextInt();
-        scan.nextLine();
-        Board board = new Board(size);
+        int size;
+        while (true) {
+            System.out.print("enter board size: ");
+            try {
+                size = scan.nextInt();
+                scan.nextLine();
+                break;
+            } catch (InputMismatchException e) {
+                scan.nextLine();
+                continue;
+            }
+        }
 
-        System.out.println(board);
+        Board board = new Board(size);
+        System.out.println("\n" + board);
         play(board);
     }
 
@@ -118,7 +128,9 @@ public class Picross {
                 case FILLED:
                     return "■";
                 case EMPTY:
-                    return "□"; //TODO: prints as ?
+                    return "x";
+                case REVEALED:
+                    return filled ? "■" : "x";
                 default:
                     return "_";
             }
@@ -153,9 +165,9 @@ public class Picross {
                 for (int x = 0; x < tiles.length; x++) {
                     if (tiles[y][x].isFilled()) {
                         if (prev) {
-                            rowCount.set(rowCount.size() - 1, rowCount.getLast() + 1);
+                            rowCount.set(0, rowCount.get(0) + 1);
                         } else {
-                            rowCount.add(1);
+                            rowCount.add(0, 1);
                             prev = true;
                         }
                     } else {
@@ -183,19 +195,24 @@ public class Picross {
 
         private String countCols(int leftMargin) {
             int[][] colCounts = new int[tiles.length][];
+            String topLabel = "";
             int max = 0;
 
             for (int x = 0; x < tiles.length; x++) {
                 ArrayList<Integer> counts = new ArrayList<Integer>();
+                int cnt = 0;
 
                 for (int y = 0; y < tiles.length; y++) {
-                    int cnt = 0;
                     if (tiles[y][x].isFilled()) {
                         cnt++;
                     } else if (cnt > 0) {
                         counts.add(cnt);
                         cnt = 0;
                     }
+                }
+
+                if (cnt > 0) {
+                    counts.add(cnt);
                 }
                 
                 if (counts.size() > max) {
@@ -204,13 +221,23 @@ public class Picross {
 
                 colCounts[x] = new int[counts.size()];
                 for (int i = 0; i < counts.size(); i++) {
-                    colCounts[x][i] = counts.get(i);
+                    colCounts[x][i] = counts.get(counts.size() - i - 1);
                 }
             }
 
             for (int i = 0; i < max; i++) {
-                
+                String s = " ".repeat(leftMargin);
+                for (int x = 0; x < colCounts.length; x++) {
+                    try {
+                        s += colCounts[x][i] + " ";
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        s += "  ";
+                    }
+                }
+                topLabel = s + "\n" + topLabel;
             }
+            
+            return topLabel;
         }
 
         public void markTile(int x, int y, Marks mark) {
@@ -244,7 +271,7 @@ public class Picross {
             return true;
         }
 
-        public String toString() {            
+        public String toString() {
             String out = topLabel;
             for (int y = 0; y < tiles.length; y++) {
                 out += rowLabels[y];
