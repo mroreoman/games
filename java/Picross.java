@@ -138,7 +138,7 @@ public class Picross {
                 }
             }
             rowLabels = countRows();
-            topLabel = countCols();
+            topLabel = countCols(rowLabels[0].length());
         }
 
         private String[] countRows() {
@@ -181,9 +181,8 @@ public class Picross {
             return rowLabels;
         }
 
-        private String countCols() {
+        private String countCols(int leftMargin) {
             int[][] colCounts = new int[tiles.length][];
-            int leftMargin = this.rowLabels[0].length();
             int max = 0;
 
             for (int x = 0; x < tiles.length; x++) {
@@ -193,10 +192,8 @@ public class Picross {
                     int cnt = 0;
                     if (tiles[y][x].isFilled()) {
                         cnt++;
-                    } else {
-                        if (cnt > 0) {
-                            counts.add(cnt);
-                        }
+                    } else if (cnt > 0) {
+                        counts.add(cnt);
                         cnt = 0;
                     }
                 }
@@ -247,13 +244,8 @@ public class Picross {
             return true;
         }
 
-        public String toString() { //TODO: add row/col counts
-            // have a column label string as a class cariable
-            // so it only has to create the string once
-            // don't need to store individually column counts after the initial count
-            // for rows just store a label for each row (already have this)
-            
-            String out = "";
+        public String toString() {            
+            String out = topLabel;
             for (int y = 0; y < tiles.length; y++) {
                 out += rowLabels[y];
                 for (int x = 0; x < tiles.length; x++) {
