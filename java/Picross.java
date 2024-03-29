@@ -128,7 +128,7 @@ public class Picross {
     static class Board {
         private Tile[][] tiles;
         private String[] rowLabels;
-        private int[] colCounts;
+        private String topLabel;
 
         public Board(int size) {
             tiles = new Tile[size][size];
@@ -137,8 +137,8 @@ public class Picross {
                     tiles[i][j] = new Tile();
                 }
             }
-            this.rowLabels = countRows();
-            countCols();
+            rowLabels = countRows();
+            topLabel = countCols();
         }
 
         private String[] countRows() {
@@ -181,24 +181,38 @@ public class Picross {
             return rowLabels;
         }
 
-        private void countCols() {
-            // colCounts = new int[tiles.length];
-            String[] colLabels = new String[tiles.length];
+        private String countCols() {
+            int[][] colCounts = new int[tiles.length][];
+            int leftMargin = this.rowLabels[0].length();
+            int max = 0;
 
             for (int x = 0; x < tiles.length; x++) {
-                colLabels[x] = "";
+                ArrayList<Integer> counts = new ArrayList<Integer>();
 
                 for (int y = 0; y < tiles.length; y++) {
-                    int count = 0;
+                    int cnt = 0;
                     if (tiles[y][x].isFilled()) {
-                        count++;
+                        cnt++;
                     } else {
-                        if (count > 0) {
-                            colLabels[x] += count;
+                        if (cnt > 0) {
+                            counts.add(cnt);
                         }
-                        count = 0;
+                        cnt = 0;
                     }
                 }
+                
+                if (counts.size() > max) {
+                    max = counts.size();
+                }
+
+                colCounts[x] = new int[counts.size()];
+                for (int i = 0; i < counts.size(); i++) {
+                    colCounts[x][i] = counts.get(i);
+                }
+            }
+
+            for (int i = 0; i < max; i++) {
+                
             }
         }
 
@@ -206,7 +220,7 @@ public class Picross {
             try {
                 tiles[y][x].mark(mark);
             } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("coordinates not in board!");
+                System.out.println("coordinates not on board!");
             }
         }
 
