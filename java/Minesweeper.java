@@ -231,11 +231,9 @@ public class Minesweeper {
         public String toString() {
             String s = "  ";
             for (int i = 0; i < tiles[0].length; i++) {
-                System.out.println(i);
-                s += "h";
-                // s += String.valueOf(i+1) + " ";
+                s += i + " ";
             }
-            s = "\n";
+            s += "\n";
             for (int y = 0; y < tiles.length; y++) {
                 s += y + " ";
                 for (int x = 0; x < tiles[y].length; x++) {
