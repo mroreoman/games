@@ -7,14 +7,15 @@ my goal is to make all of the games in python, java, c++, and rust
 
 ### completed games
 #### python
-- minesweeper
+- minesweeper (has error????)
 - picross
 - age guess
 - wordle
 
 #### java
 - age guess
-- picross (in progress)
+- picross (done i think)
+- minesweeper (in progress)
 
 #### c++
 
