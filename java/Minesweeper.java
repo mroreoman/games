@@ -117,11 +117,20 @@ public class Minesweeper {
 
     private static class Board {
         private Tile[][] tiles;
+        private ArrayList<Tile> list;
+        private int mines;
 
         public Board(int width, int height, int mines) {
             tiles = new Tile[height][width];
-            setMines(mines);
-            setNeighbors();
+            list = new ArrayList<Tile>();
+            this.mines = mines;
+
+            for (int y = 0; y < tiles.length; y++) {
+                for (int x = 0; x < tiles[y].length; x++) {
+                    tiles[y][x] = new Tile();
+                    list.add(tiles[y][x]);
+                }
+            }
         }
 
         public void flagTile(int x, int y, boolean flag) {
@@ -137,6 +146,11 @@ public class Minesweeper {
         public boolean clickTile(int x, int y) {
             if (!tileInBounds(x, y))
                 return false;
+                
+            // sets mines after first click to avoid instant death
+            if (list.size() == tiles.length * tiles[0].length)
+                setMines(tiles[y][x], mines);
+            
             if (tiles[y][x].mark != Marks.HIDDEN)
                 return false;
                 
@@ -181,22 +195,18 @@ public class Minesweeper {
             return false;
         }
 
-        private void setMines(int mines) {
-            ArrayList<Tile> list = new ArrayList<Tile>();
+        private void setMines(Tile clicked, int mines) {
             Random rand = new Random();
 
-            for (int y = 0; y < tiles.length; y++) {
-                for (int x = 0; x < tiles[y].length; x++) {
-                    tiles[y][x] = new Tile();
-                    list.add(tiles[y][x]);
-                }
-            }
+            list.remove(clicked);
 
             for (int i = 0; i < mines; i++) {
                 int n = rand.nextInt(list.size());
                 list.get(n).isMine = true;
                 list.remove(n);
             }
+
+            setNeighbors();
         }
 
         private void setNeighbors() {
