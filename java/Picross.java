@@ -10,19 +10,7 @@ public class Picross {
     enum Marks {HIDDEN, FILLED, EMPTY, REVEALED};
 
     public static void main(String[] args) {
-        int size;
-        while (true) {
-            System.out.print("enter board size: ");
-            try {
-                size = scan.nextInt();
-                scan.nextLine();
-                break;
-            } catch (InputMismatchException e) {
-                scan.nextLine();
-                continue;
-            }
-        }
-
+        int size = scanNum("enter board size");
         Board board = new Board(size);
         System.out.println("\n" + board);
         play(board);
@@ -38,39 +26,39 @@ public class Picross {
                 case "x":
                     return;
                 case "f": {
-                    int[] xy = scanXY();
+                    int[] xy = scanNum();
                     board.markTile(xy[0], xy[1], Marks.FILLED);
                     break;
                 } case "fr": {
-                    int y = scanY();
+                    int y = scanNum("y");
                     board.markRow(y, Marks.FILLED);
                     break;
                 } case "fc": {
-                    int x = scanX();
+                    int x = scanNum("x");
                     board.markCol(x, Marks.FILLED);
                     break;
                 } case "e": {
-                    int[] xy = scanXY();
+                    int[] xy = scanNum();
                     board.markTile(xy[0], xy[1], Marks.EMPTY);
                     break;
                 } case "er": {
-                    int y = scanY();
+                    int y = scanNum("y");
                     board.markRow(y, Marks.EMPTY);
                     break;
                 } case "ec": {
-                    int x = scanX();
+                    int x = scanNum("x");
                     board.markCol(x, Marks.EMPTY);
                     break;
                 } case "u": {
-                    int[] xy = scanXY();
+                    int[] xy = scanNum();
                     board.markTile(xy[0], xy[1], Marks.HIDDEN);
                     break;
                 } case "ur": {
-                    int y = scanY();
+                    int y = scanNum("y");
                     board.markRow(y, Marks.HIDDEN);
                     break;
                 } case "uc": {
-                    int x = scanX();
+                    int x = scanNum("x");
                     board.markCol(x, Marks.HIDDEN);
                     break;
                 } default:
@@ -81,26 +69,32 @@ public class Picross {
         }
     }
 
-    public static int[] scanXY() {
-        System.out.print("x,y: ");
-        String[] coords = scan.nextLine().split(",");
-        int x = Integer.parseInt(coords[0]) - 1;
-        int y = Integer.parseInt(coords[1]) - 1;
+    public static int[] scanNum() {
+        int x, y;
+        while (true) {
+            System.out.print("x,y: ");
+            try {
+                String[] nums = scan.nextLine().split(",");
+                x = Integer.parseInt(nums[0]);
+                y = Integer.parseInt(nums[1]);
+                break;
+            } catch (NumberFormatException e) {
+                continue;
+            }
+        }
         return new int[]{x,y};
     }
 
-    public static int scanX() {
-        System.out.print("x: ");
-        String coord = scan.nextLine();
-        int x = Integer.parseInt(coord) - 1;
-        return x;
-    }
-
-    public static int scanY() {
-        System.out.print("y: ");
-        String coord = scan.nextLine();
-        int y = Integer.parseInt(coord) - 1;
-        return y;
+    public static int scanNum(String name) {
+        System.out.print(name + ": ");
+        int num;
+        while (!scan.hasNextInt()) {
+            System.out.print(name + ": ");
+            scan.next();
+        }
+        num = scan.nextInt();
+        scan.nextLine();
+        return num;
     }
 
     static class Tile {
@@ -113,6 +107,10 @@ public class Picross {
 
         public boolean isFilled() {
             return filled;
+        }
+
+        public boolean isHidden() {
+            return mark == Marks.HIDDEN;
         }
 
         public boolean isSolved() {
@@ -242,22 +240,22 @@ public class Picross {
 
         public void markTile(int x, int y, Marks mark) {
             try {
-                tiles[y][x].mark(mark);
+                tiles[y-1][x-1].mark(mark);
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("coordinates not on board!");
             }
         }
 
         public void markCol(int x, Marks mark) {
-            for (int y = 0; y < tiles.length; y++) {
-                markTile(x, y, mark);
-            }
+            for (int y = 0; y < tiles.length; y++)
+                if (tiles[y][x].isHidden())
+                    markTile(x, y, mark);
         }
 
         public void markRow(int y, Marks mark) {
-            for (int x = 0; x < tiles.length; y++) {
-                markTile(x, y, mark);
-            }
+            for (int x = 0; x < tiles.length; x++)
+                if (tiles[y][x].isHidden())
+                    markTile(x, y, mark);
         }
 
         public boolean isSolved() {
