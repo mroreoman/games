@@ -1,7 +1,6 @@
 import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 
 public class Picross {
     final static Random rand = new Random();
