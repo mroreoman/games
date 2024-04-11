@@ -66,7 +66,7 @@ public class Minesweeper implements Game {
     private int mines;
     private boolean alive = true;
     private int moves = 0;
-    private int flags = 0; //TODO this is not accurate
+    private int flags = 0;
 
     public Minesweeper() {
         board = new Tile[9][9];
@@ -137,8 +137,14 @@ public class Minesweeper implements Game {
             }
         }
 
-        if (board[y][x].mark != old)
+        if (board[y][x].mark != old) {
             moves++;
+            if (old == Mark.FLAGGED) {
+                flags--;
+            } else if (board[y][x].mark == Mark.FLAGGED) {
+                flags++;
+            }
+        }
         
         System.out.println(sBoard());
         return s;
@@ -193,13 +199,7 @@ public class Minesweeper implements Game {
         if (board[y][x].mark == Mark.REVEALED)
             return;
         
-        if (flag) {
-            board[y][x].mark = Mark.FLAGGED;
-            flags++;
-        } else {
-            board[y][x].mark = Mark.HIDDEN;
-            flags--;
-        }
+        board[y][x].mark = flag ? Mark.FLAGGED : Mark.HIDDEN;
     }
 
     public State clickTile(int x, int y) {
