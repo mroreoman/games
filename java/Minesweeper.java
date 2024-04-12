@@ -5,29 +5,6 @@ import java.util.Scanner;
 public class Minesweeper implements Game {
     private static enum Mark {HIDDEN, FLAGGED, REVEALED};
 
-    private static enum Colors {
-        WHITE("\u001B[37m"),
-        BLUE("\u001B[34m"),
-        GREEN("\u001B[32m"),
-        YELLOW("\u001B[33m"),
-        MAGENTA("\u001B[35m"),
-        RED("\u001B[31m"),
-        CYAN("\u001B[36m"),
-        GREY("\u001B[37m"),
-        BLACK("\u001B[30m"),
-        RESET("\u001B[0m");
-        
-        private String s;
-        
-        Colors(String s) {
-            this.s = s;
-        }
-        
-        public String toString() {
-            return s;
-        }
-    }
-
     private static class Tile {
         private boolean isMine = false;
         private int neighbors;
@@ -165,8 +142,8 @@ public class Minesweeper implements Game {
             System.out.print("x,y: ");
             String[] raw = scan.nextLine().split(",");
             try {
-                x = Integer.parseInt(raw[0].trim());
-                y = Integer.parseInt(raw[1].trim());
+                x = Integer.parseInt(raw[0].strip());
+                y = Integer.parseInt(raw[1].strip());
             } catch (Exception e) {
                 continue;
             }
