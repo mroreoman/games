@@ -76,7 +76,7 @@ public class Wordle implements Game {
         } else if (!isAlpha(in)) {
             System.out.println("guess must be letters");
         } else if (!wordleLa.contains(in) && !wordleTa.contains(in)) {
-            System.out.println("guess is not in word list");
+            System.out.println("guess is not in word list"); //TODO crane not in word list
         } else {
             return in;
         }
