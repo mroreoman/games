@@ -2,70 +2,72 @@ import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
 
-public class Picross {
+public class Picross implements Game {
     final static Random rand = new Random();
     final static Scanner scan = new Scanner(System.in);
 
     enum Marks {HIDDEN, FILLED, EMPTY, REVEALED};
 
-    public static void main(String[] args) {
+    private Board board;
+
+    public Picross() {
         int size = scanNum("enter board size");
-        Board board = new Board(size);
-        System.out.println("\n" + board);
-        play(board);
+        board = new Board(size);
     }
 
-    private static void play(Board board) {
-        String in;
-        while (true) {
-            System.out.print("move: ");
-            in = scan.nextLine();
-            
-            switch (in.toLowerCase()) {
-                case "x":
-                    return;
-                case "f": {
-                    int[] xy = scanNum();
-                    board.markTile(xy[0], xy[1], Marks.FILLED);
-                    break;
-                } case "fr": {
-                    int y = scanNum("y");
-                    board.markRow(y, Marks.FILLED);
-                    break;
-                } case "fc": {
-                    int x = scanNum("x");
-                    board.markCol(x, Marks.FILLED);
-                    break;
-                } case "e": {
-                    int[] xy = scanNum();
-                    board.markTile(xy[0], xy[1], Marks.EMPTY);
-                    break;
-                } case "er": {
-                    int y = scanNum("y");
-                    board.markRow(y, Marks.EMPTY);
-                    break;
-                } case "ec": {
-                    int x = scanNum("x");
-                    board.markCol(x, Marks.EMPTY);
-                    break;
-                } case "u": {
-                    int[] xy = scanNum();
-                    board.markTile(xy[0], xy[1], Marks.HIDDEN);
-                    break;
-                } case "ur": {
-                    int y = scanNum("y");
-                    board.markRow(y, Marks.HIDDEN);
-                    break;
-                } case "uc": {
-                    int x = scanNum("x");
-                    board.markCol(x, Marks.HIDDEN);
-                    break;
-                } default:
-                    continue;
+    public State play() { //TODO add submit
+        System.out.println("\n" + board);
+        System.out.print("move: ");
+        String move = scan.nextLine().toLowerCase();
+        State s = State.PLAYING;
+        
+        switch (move) {
+            case "x":
+                s = State.PAUSED;
+            case "f": {
+                int[] xy = scanNum();
+                board.markTile(xy[0], xy[1], Marks.FILLED);
+                break;
+            } case "fr": {
+                int y = scanNum("y");
+                board.markRow(y, Marks.FILLED);
+                break;
+            } case "fc": {
+                int x = scanNum("x");
+                board.markCol(x, Marks.FILLED);
+                break;
+            } case "e": {
+                int[] xy = scanNum();
+                board.markTile(xy[0], xy[1], Marks.EMPTY);
+                break;
+            } case "er": {
+                int y = scanNum("y");
+                board.markRow(y, Marks.EMPTY);
+                break;
+            } case "ec": {
+                int x = scanNum("x");
+                board.markCol(x, Marks.EMPTY);
+                break;
+            } case "u": {
+                int[] xy = scanNum();
+                board.markTile(xy[0], xy[1], Marks.HIDDEN);
+                break;
+            } case "ur": {
+                int y = scanNum("y");
+                board.markRow(y, Marks.HIDDEN);
+                break;
+            } case "uc": {
+                int x = scanNum("x");
+                board.markCol(x, Marks.HIDDEN);
+                break;
             }
-            
-            System.out.println(board);
         }
+
+        return s;
+    }
+
+    public String score() { //TODO finish
+        return "";
     }
 
     public static int[] scanNum() {
@@ -245,7 +247,7 @@ public class Picross {
             }
         }
 
-        public void markCol(int x, Marks mark) {
+        public void markCol(int x, Marks mark) { //TODO not working???
             for (int y = 0; y < tiles.length; y++)
                 if (tiles[y][x].isHidden())
                     markTile(x, y, mark);

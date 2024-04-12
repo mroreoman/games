@@ -1,5 +1,5 @@
 public interface Game {
-    public enum State {LOST, WON, PLAYING};
+    public enum State {LOST, WON, PLAYING, PAUSED};
 
     /**returns whether game should continue */
     public abstract State play();

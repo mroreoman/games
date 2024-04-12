@@ -107,7 +107,7 @@ public class Minesweeper implements Game {
         String move = scan.nextLine().toLowerCase();
 
         if (move.equals("x"))
-            return State.PLAYING;
+            return State.PAUSED;
 
         int[] coords = scanClick();
         int x = coords[0];

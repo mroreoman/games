@@ -5,11 +5,11 @@ import java.util.stream.Stream;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class Wordle {
+public class Wordle { //TODO implement Game
     static Scanner scan = new Scanner(System.in);
     static Stream<String> wordleLa, wordleTa;
 
-    public static void main(String[] args) throws Exception { //TODO: reformat all the games to work with a runner
+    public static void main(String[] args) throws Exception {
         Path cur = new File("").toPath().toAbsolutePath();
         wordleLa = Files.lines(cur.resolve("wordleDictionary/wordle-Ta.txt"));
         wordleTa = Files.lines(cur.resolve("wordleDictionary/wordle-Ta.txt"));
