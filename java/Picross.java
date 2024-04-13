@@ -270,7 +270,7 @@ public class Picross implements Game {
             return true;
         }
 
-        public String toString() {
+        public String toString() { //TODO add support for multiple digit labels
             String out = topLabel;
             for (int y = 0; y < tiles.length; y++) {
                 out += rowLabels[y];
