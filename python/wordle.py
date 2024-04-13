@@ -22,6 +22,7 @@ with open(os.path.join(cur_path, '..\\wordleDictionary\\wordle-Ta.txt'), "r") as
         wordleTa.append(line.strip())
 
 word = wordleLa[random.randrange(2315)].strip()
+# word = "dates" TODO: total will give yrryr
 
 wordLetters = {}
 for letter in word:
