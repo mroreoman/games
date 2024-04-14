@@ -14,8 +14,9 @@ my goal is to make all of the games in python, java, c++, and rust
 
 #### java
 - age guess
-- picross (done?)
-- minesweeper (done?)
+- picross (under rennivation)
+- minesweeper
+- wordle
 
 #### c++
 
