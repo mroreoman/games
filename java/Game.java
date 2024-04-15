@@ -1,5 +1,5 @@
-public interface Game {
-    public enum State {LOST, WON, PLAYING, PAUSED};
+public abstract class Game {
+    public enum States {LOST, WON, PLAYING, PAUSED};
 
     public enum Colors {
         WHITE("\u001B[37m"),
@@ -24,6 +24,11 @@ public interface Game {
         }
     }
 
-    /**returns whether game should continue */
-    public abstract State play();
+    protected States state;
+
+    public abstract void play();
+
+    public String toString() {
+        return hashCode() + " - " + state;
+    }
 }

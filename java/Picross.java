@@ -2,7 +2,7 @@ import java.util.Scanner;
 import java.util.Random;
 import java.util.ArrayList;
 
-public class Picross implements Game {
+public class Picross extends Game {
     final static Random rand = new Random();
     final static Scanner scan = new Scanner(System.in);
 
@@ -11,23 +11,23 @@ public class Picross implements Game {
     private Board board;
 
     public Picross() {
+        state = States.PLAYING;
         int size = scanNum("enter board size") + 1;
         board = new Board(size);
     }
 
-    public State play() {
+    public void play() {
         System.out.println("\n" + board);
         System.out.print("move: ");
         String move = scan.nextLine().toLowerCase();
-        State s = State.PLAYING;
         
         switch (move) {
             case "x":
-                s = State.PAUSED;
+                state = States.PAUSED;
                 break;
             case "s":
                 if (board.isSolved()) {
-                    s = State.WON;
+                    state = States.WON;
                 } else {
                     System.out.println("not solved");
                 }
@@ -70,8 +70,10 @@ public class Picross implements Game {
                 break;
             }
         }
-
-        return s;
+    }
+    
+    public String toString() {
+        return "Picross" + super.toString();
     }
 
     /**subtracts 1 from entered numbers*/
