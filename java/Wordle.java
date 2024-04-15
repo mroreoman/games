@@ -29,15 +29,12 @@ public class Wordle implements Game {
         
         if (guess.equals(word)) {
             System.out.println(Colors.GREEN + guess + Colors.RESET);
+            System.out.println("guesses: " + guesses);
             return State.WON;
         }
         
         System.out.println(checkGuess(guess));
         return State.PLAYING;
-    }
-
-    public String score() {
-        return "guesses: " + guesses;
     }
 
     private String checkGuess(String guess) {

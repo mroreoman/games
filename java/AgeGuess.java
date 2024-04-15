@@ -24,10 +24,7 @@ public class AgeGuess implements Game {
             return State.PLAYING;
         }
         guesses++;
+        System.out.println("you won! it took " + guesses + " guesses.");
         return State.WON;
-    }
-
-    public String score() {
-        return "you took " + guesses + " guesses";
     }
 }

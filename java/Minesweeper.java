@@ -127,14 +127,6 @@ public class Minesweeper implements Game {
         return s;
     }
 
-    public String score() {
-        if (won()) {
-            return "you won! it took " + moves + " moves.";
-        } else {
-            return "you lost brah";
-        }
-    }
-
     /**returns array of {x,y} */
     private int[] scanClick() {
         int x, y;
@@ -187,14 +179,18 @@ public class Minesweeper implements Game {
             return State.PLAYING;
         
         board[y][x].mark = Mark.REVEALED;
-        if (board[y][x].isMine)
+        if (board[y][x].isMine) {
+            System.out.println("you lost brah");
             return State.LOST;
+        }
         
         if (board[y][x].neighbors == 0)
             clickNeighbors(x, y);
         
-        if (won())
+        if (won()) {
+            System.out.println("you won! it took " + moves + " moves.");
             return State.WON;
+        }
         
         return State.PLAYING;
     }

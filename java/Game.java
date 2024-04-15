@@ -26,6 +26,4 @@ public interface Game {
 
     /**returns whether game should continue */
     public abstract State play();
-    
-    public abstract String score();
 }
