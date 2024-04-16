@@ -27,15 +27,15 @@ public class Runner {
             }
             System.out.print("enter game number: ");
             int n = scan.nextInt() - 1;
-            System.out.println();
-            play(games.get(n)); //TODO finish this
+            scan.nextLine();
+            play(games.get(n)); //TODO validation
         } else if (in.equals("new")) {
             for (int i = 0; i < gameList.length; i++) {
                 System.out.println((i+1) + ". " + gameList[i].getName());
             }
             System.out.print("enter choice: ");
             int n = scan.nextInt() - 1;
-            System.out.println();
+            scan.nextLine();
             try {
                 games.add((Game) gameList[n].getConstructor().newInstance());
                 play(games.getLast());
@@ -46,6 +46,7 @@ public class Runner {
     }
 
     public static void play(Game g) {
+        System.out.println();
         while (g.state == Game.States.PLAYING) {
             g.play();
         }

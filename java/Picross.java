@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.function.Consumer;
 import java.util.Random;
 import java.util.ArrayList;
 
@@ -27,10 +28,14 @@ public class Picross extends Game {
                 break;
             case "s":
                 if (board.isSolved()) {
+                    System.out.println("good job dude");
                     state = States.WON;
                 } else {
                     System.out.println("not solved");
                 }
+                break;
+            case "r":
+                board.foreach(t -> t.mark(Marks.HIDDEN));
                 break;
             case "f": {
                 int[] xy = scanNum();
@@ -288,6 +293,14 @@ public class Picross extends Game {
                 out += "\n";
             }
             return out;
+        }
+
+        public void foreach(Consumer<Tile> action) {
+            for (Tile[] row : tiles) {
+                for (Tile tile : row) {
+                    action.accept(tile);
+                }
+            }
         }
     }
 }
