@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Wordle implements Game {
+public class Wordle extends Game {
     private final static Scanner scan = new Scanner(System.in);
     private final static Random rand = new Random();
     private static List<String> wordleLa, wordleTa;
@@ -16,6 +16,8 @@ public class Wordle implements Game {
     private int guesses = 0;
 
     public Wordle() throws IOException {
+        state = States.PLAYING;
+
         Path cur = new File("").toPath().toAbsolutePath();
         wordleLa = Files.readAllLines(cur.resolve("wordleDictionary/wordle-La.txt"));
         wordleTa = Files.readAllLines(cur.resolve("wordleDictionary/wordle-Ta.txt"));
@@ -23,21 +25,17 @@ public class Wordle implements Game {
         word = wordleLa.get(rand.nextInt(wordleLa.size()));
     }
 
-    public State play() {
+    public void play() {
         String guess = input();
         guesses++;
         
         if (guess.equals(word)) {
             System.out.println(Colors.GREEN + guess + Colors.RESET);
-            return State.WON;
+            System.out.println("guesses: " + guesses);
+            state = States.WON;
         }
         
         System.out.println(checkGuess(guess));
-        return State.PLAYING;
-    }
-
-    public String score() {
-        return "guesses: " + guesses;
     }
 
     private String checkGuess(String guess) {
@@ -84,11 +82,15 @@ public class Wordle implements Game {
         }
     }
 
-    static boolean isAlpha(String s) {
+    private static boolean isAlpha(String s) {
         for (char c : s.toCharArray())
             if (!Character.isLetter(c))
                 return false;
         
         return true;
+    }
+
+    public String toString() {
+        return "Wordle" + super.toString();
     }
 }

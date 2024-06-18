@@ -1,8 +1,9 @@
 import java.util.Scanner;
+import java.util.function.Consumer;
 import java.util.Random;
 import java.util.ArrayList;
 
-public class Picross implements Game {
+public class Picross extends Game {
     final static Random rand = new Random();
     final static Scanner scan = new Scanner(System.in);
 
@@ -11,19 +12,31 @@ public class Picross implements Game {
     private Board board;
 
     public Picross() {
-        int size = scanNum("enter board size");
+        state = States.PLAYING;
+        int size = scanNum("enter board size") + 1;
         board = new Board(size);
     }
 
-    public State play() { //TODO add submit
+    public void play() {
         System.out.println("\n" + board);
         System.out.print("move: ");
         String move = scan.nextLine().toLowerCase();
-        State s = State.PLAYING;
         
         switch (move) {
             case "x":
-                s = State.PAUSED;
+                state = States.PAUSED;
+                break;
+            case "s":
+                if (board.isSolved()) {
+                    System.out.println("good job dude");
+                    state = States.WON;
+                } else {
+                    System.out.println("not solved");
+                }
+                break;
+            case "r":
+                board.foreach(t -> t.mark(Marks.HIDDEN));
+                break;
             case "f": {
                 int[] xy = scanNum();
                 board.markTile(xy[0], xy[1], Marks.FILLED);
@@ -62,22 +75,21 @@ public class Picross implements Game {
                 break;
             }
         }
-
-        return s;
+    }
+    
+    public String toString() {
+        return "Picross" + super.toString();
     }
 
-    public String score() { //TODO finish
-        return "";
-    }
-
+    /**subtracts 1 from entered numbers*/
     public static int[] scanNum() {
         int x, y;
         while (true) {
             System.out.print("x,y: ");
             try {
                 String[] nums = scan.nextLine().split(",");
-                x = Integer.parseInt(nums[0]);
-                y = Integer.parseInt(nums[1]);
+                x = Integer.parseInt(nums[0]) - 1;
+                y = Integer.parseInt(nums[1]) - 1;
                 break;
             } catch (NumberFormatException e) {
                 continue;
@@ -86,6 +98,7 @@ public class Picross implements Game {
         return new int[]{x,y};
     }
 
+    /**subtracts 1 from entered number*/
     public static int scanNum(String name) {
         System.out.print(name + ": ");
         int num;
@@ -93,7 +106,7 @@ public class Picross implements Game {
             System.out.print(name + ": ");
             scan.next();
         }
-        num = scan.nextInt();
+        num = scan.nextInt() - 1;
         scan.nextLine();
         return num;
     }
@@ -241,13 +254,13 @@ public class Picross implements Game {
 
         public void markTile(int x, int y, Marks mark) {
             try {
-                tiles[y-1][x-1].mark(mark);
+                tiles[y][x].mark(mark);
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("coordinates not on board!");
             }
         }
 
-        public void markCol(int x, Marks mark) { //TODO not working???
+        public void markCol(int x, Marks mark) {
             for (int y = 0; y < tiles.length; y++)
                 if (tiles[y][x].isHidden())
                     markTile(x, y, mark);
@@ -280,6 +293,14 @@ public class Picross implements Game {
                 out += "\n";
             }
             return out;
+        }
+
+        public void foreach(Consumer<Tile> action) {
+            for (Tile[] row : tiles) {
+                for (Tile tile : row) {
+                    action.accept(tile);
+                }
+            }
         }
     }
 }

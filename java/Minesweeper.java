@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Minesweeper implements Game {
+public class Minesweeper extends Game {
     private static enum Mark {HIDDEN, FLAGGED, REVEALED};
 
     private static class Tile {
@@ -46,6 +46,7 @@ public class Minesweeper implements Game {
     private int flags = 0;
 
     public Minesweeper() {
+        state = States.PLAYING;
         board = new Tile[9][9];
         mines = 10;
         ArrayList<Tile> list = new ArrayList<Tile>();
@@ -57,7 +58,7 @@ public class Minesweeper implements Game {
             }
         }
         
-        System.out.println(sBoard());
+        System.out.println(board());
         System.out.println("first click: ");
         int[] coords = scanClick();
         list.remove(board[coords[1]][coords[0]]);
@@ -76,25 +77,24 @@ public class Minesweeper implements Game {
 
         clickTile(coords[0], coords[1]);
         moves++;
-        System.out.println(sBoard());
+        System.out.println(board());
     }
 
-    public State play() {
+    public void play() {
         System.out.print("move: ");
         String move = scan.nextLine().toLowerCase();
 
         if (move.equals("x"))
-            return State.PAUSED;
+            state = States.PAUSED;
 
         int[] coords = scanClick();
         int x = coords[0];
         int y = coords[1];
-        State s = State.PLAYING;
         Mark old = board[y][x].mark;
         
         switch (move) {
             case "c": {
-                s = clickTile(x, y);
+                state = clickTile(x, y);
                 break;
             } case "f": {
                 flagTile(x, y, true);
@@ -103,7 +103,7 @@ public class Minesweeper implements Game {
                 flagTile(x, y, false);
                 break;
             } case "cn": {
-                s = clickNeighbors(x, y);
+                state = clickNeighbors(x, y);
                 break;
             } case "fn": {
                 flagNeighbors(x, y, true);
@@ -123,16 +123,7 @@ public class Minesweeper implements Game {
             }
         }
         
-        System.out.println(sBoard());
-        return s;
-    }
-
-    public String score() {
-        if (won()) {
-            return "you won! it took " + moves + " moves.";
-        } else {
-            return "you lost brah";
-        }
+        System.out.println(board());
     }
 
     /**returns array of {x,y} */
@@ -179,24 +170,28 @@ public class Minesweeper implements Game {
         board[y][x].mark = flag ? Mark.FLAGGED : Mark.HIDDEN;
     }
 
-    public State clickTile(int x, int y) {
+    public States clickTile(int x, int y) {
         if (!tileInBounds(x, y))
-            return State.PLAYING;
+            return States.PLAYING;
         
         if (board[y][x].mark != Mark.HIDDEN)
-            return State.PLAYING;
+            return States.PLAYING;
         
         board[y][x].mark = Mark.REVEALED;
-        if (board[y][x].isMine)
-            return State.LOST;
+        if (board[y][x].isMine) {
+            System.out.println("you lost brah");
+            return States.LOST;
+        }
         
         if (board[y][x].neighbors == 0)
             clickNeighbors(x, y);
         
-        if (won())
-            return State.WON;
+        if (won()) {
+            System.out.println("you won! it took " + moves + " moves.");
+            return States.WON;
+        }
         
-        return State.PLAYING;
+        return States.PLAYING;
     }
 
     public void flagNeighbors(int x, int y, boolean flag) {
@@ -213,22 +208,22 @@ public class Minesweeper implements Game {
         }
     }
 
-    public State clickNeighbors(int x, int y) {
+    public States clickNeighbors(int x, int y) {
         if (board[y][x].mark != Mark.REVEALED)
-            return State.PLAYING;
+            return States.PLAYING;
 
         for (int yy = y-1; yy <= y+1; yy++) {
             for (int xx = x-1; xx <= x+1; xx++) {
                 if (yy == y && xx == x)
                     continue;
                 
-                State s = clickTile(xx, yy);
-                if (s != State.PLAYING)
+                States s = clickTile(xx, yy);
+                if (s != States.PLAYING)
                     return s;
             }
         }
 
-        return State.PLAYING;
+        return States.PLAYING;
     }
 
     public boolean won() {
@@ -251,7 +246,7 @@ public class Minesweeper implements Game {
         return true;
     }
 
-    public String sBoard() {
+    public String board() {
         String s = "mines: " + (mines - flags) + "\t" + (alive ? ":)" : ":(") + "\tmoves: " + moves + "\n\n";
         s += "\t";
         for (int i = 0; i < board[0].length; i++) {
@@ -270,5 +265,9 @@ public class Minesweeper implements Game {
             s += "\n";
         }
         return s;
+    }
+
+    public String toString() {
+        return "Minesweeper" + super.toString();
     }
 }
